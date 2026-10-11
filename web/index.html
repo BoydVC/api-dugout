@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>API Solomon Dugout · 11U</title>
+<meta name="theme-color" content="#0a1628">
+<style>/*__CSS__*/</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <span class="crest" aria-hidden="true">
+      <svg viewBox="0 0 48 48" width="42" height="42">
+        <defs><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c8102e"/><stop offset="1" stop-color="#8b0a1e"/></linearGradient></defs>
+        <circle cx="24" cy="24" r="22" fill="#0a1628" stroke="#f5f0e6" stroke-width="2"/>
+        <circle cx="24" cy="24" r="18" fill="none" stroke="url(#lg)" stroke-width="3"/>
+        <path d="M24 10 L30 22 L24 20 L18 22 Z" fill="#f5f0e6"/>
+        <rect x="22.5" y="20" width="3" height="14" rx="1" fill="#f5f0e6"/>
+        <text x="24" y="41" text-anchor="middle" font-size="7" font-weight="800" fill="#c8102e" font-family="system-ui">11U</text>
+      </svg>
+    </span>
+    <div>
+      <h1>API Solomon Dugout</h1>
+      <p class="sub">Navy · red · dirt · defensive plays, lineup &amp; scorebook</p>
+    </div>
+  </div>
+  <div class="topmeta">
+    <span class="pill">API · 11U SOLOMON</span>
+    <span class="pill soft">offline · private</span>
+    <button id="btnHelp" class="ghost" title="How to use">❓ Help</button>
+  </div>
+</header>
+
+<nav class="tabs" role="tablist" aria-label="Screens">
+  <button class="tab on" data-screen="diamond" role="tab" aria-selected="true">◆ Diamond</button>
+  <button class="tab" data-screen="lineup" role="tab">📋 Lineup</button>
+  <button class="tab" data-screen="scorebook" role="tab">📊 Scorebook</button>
+  <button class="tab" data-screen="practice" role="tab">📝 Practice</button>
+</nav>
+
+<main class="layout">
+  <!-- DIAMOND SCREEN -->
+  <section class="screen on" id="screen-diamond">
+    <div class="boardcol">
+      <div class="toolbar" id="toolbar" role="toolbar" aria-label="Tools">
+        <button data-tool="move" class="tool on" title="Move fielders (M)">✋<span>Move</span></button>
+        <button data-tool="throw" class="tool" title="Throw / relay arrow (T)"><i class="ico throw"></i><span>Throw</span></button>
+        <button data-tool="run" class="tool" title="Runner / coverage path (R)"><i class="ico run"></i><span>Run</span></button>
+        <button data-tool="cutoff" class="tool" title="Cutoff / relay lane (C)"><i class="ico cut"></i><span>Cutoff</span></button>
+        <button data-tool="erase" class="tool" title="Eraser (E)">🧽<span>Erase</span></button>
+        <span class="sep"></span>
+        <button id="btnUndo" class="act" title="Undo (Ctrl+Z)">↶<span>Undo</span></button>
+        <button id="btnClearArrows" class="act" title="Clear arrows on this frame">✖<span>Clear</span></button>
+        <button id="btnReset" class="act" title="Reset to standard defense">⟲<span>Reset</span></button>
+      </div>
+      <div class="legend" aria-label="Arrow legend">
+        <span><i class="lg throw"></i> Throw</span>
+        <span><i class="lg run"></i> Coverage run</span>
+        <span><i class="lg cut"></i> Cutoff / relay</span>
+        <span class="lg-hint">Drag from a fielder to snap the start</span>
+      </div>
+      <div class="diamondwrap" id="diamondwrap">
+        <canvas id="diamond" aria-label="Baseball diamond tactics board"></canvas>
+        <div class="playtitle" id="playTitle"></div>
+        <div class="diamondbadge" aria-hidden="true">API · 11U</div>
+      </div>
+      <div class="timeline" id="timeline">
+        <div class="transport">
+          <button id="btnFirst" title="First frame">⏮</button>
+          <button id="btnPrev" title="Step back">◀</button>
+          <button id="btnPlay" class="big" title="Play / pause (Space)">▶</button>
+          <button id="btnNext" title="Step forward">▶|</button>
+          <label class="speed" title="Playback speed">Speed
+            <select id="speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option><option value="2">2×</option></select>
+          </label>
+        </div>
+        <div class="frames">
+          <div id="frameChips" class="chips"></div>
+          <button id="btnAddFrame" class="add" title="Copy this frame to a new step">＋ Frame</button>
+          <button id="btnDelFrame" class="del" title="Delete this frame">🗑</button>
+        </div>
+        <div class="hint" id="frameHint">Frame 1 of 1. Place fielders, tap ＋ Frame, then move them to build a defensive play.</div>
+      </div>
+    </div>
+
+    <aside class="side">
+      <div class="card hero">
+        <h2>Defense setup</h2>
+        <p class="note">Standard 9-fielder youth diamond. Drag positions, draw throws and coverage paths, then animate frame by frame. No roster invented — labels are positions only.</p>
+        <div class="checks">
+          <label><input type="checkbox" id="chkLabels" checked> Show position labels</label>
+          <label><input type="checkbox" id="chkGhost" checked> Ghost of last frame</label>
+          <label><input type="checkbox" id="chkBases" checked> Highlight bases</label>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Defensive presets <span class="tag">generic examples</span></h2>
+        <p class="note">Youth-appropriate teaching plays. Not from any real game or roster. Load one, then press ▶.</p>
+        <div id="presetList" class="presets"></div>
+      </div>
+
+      <div class="card">
+        <h2>My plays</h2>
+        <div class="saverow">
+          <input id="playName" type="text" maxlength="40" placeholder="Name this play">
+          <button id="btnSave" class="primary">💾 Save</button>
+        </div>
+        <div id="savedList" class="saved"></div>
+        <label class="notes">Coach notes <textarea id="notes" rows="3" placeholder="What should each fielder look for?"></textarea></label>
+        <div class="exports">
+          <button id="btnExportJson">⬇ Export JSON</button>
+          <button id="btnImportJson">⬆ Import JSON</button>
+          <button id="btnExportPng">🖼 Save PNG</button>
+          <button id="btnNew">✨ New board</button>
+          <input id="fileImport" type="file" accept="application/json,.json" hidden>
+        </div>
+      </div>
+    </aside>
+  </section>
+
+  <!-- LINEUP SCREEN -->
+  <section class="screen" id="screen-lineup" hidden>
+    <div class="panel">
+      <div class="card hero wide">
+        <h2>Lineup card <span class="tag soft">family editable</span></h2>
+        <p class="note">Blank 1–9 batting order plus EH (extra hitter). Names start as placeholders — edit and they stay in this browser only. No teammates invented.</p>
+        <div class="lineup-meta">
+          <label>Game / date note <input id="lineupGame" type="text" maxlength="60" placeholder="e.g. Saturday game — you fill this in"></label>
+          <button id="btnClearLineup" class="act">Clear names</button>
+        </div>
+        <div class="lineup-grid" id="lineupGrid"></div>
+        <p class="footnote">Saved automatically to localStorage on this device.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCOREBOOK SCREEN -->
+  <section class="screen" id="screen-scorebook" hidden>
+    <div class="panel">
+      <div class="card hero wide">
+        <h2>Scorebook lite <span class="tag soft">you fill in</span></h2>
+        <p class="note">Simple inning grid for one game. Everything starts empty — tap cells to cycle marks. No scores or opponents pre-filled.</p>
+        <div class="sb-meta">
+          <label>Us <input id="sbUs" type="text" maxlength="24" placeholder="Us (optional)"></label>
+          <label>Them <input id="sbThem" type="text" maxlength="24" placeholder="Opponent (optional)"></label>
+          <label>Notes <input id="sbNotes" type="text" maxlength="80" placeholder="Game notes…"></label>
+          <button id="btnClearScore" class="act">Reset grid</button>
+        </div>
+        <div class="scorebook-wrap">
+          <table class="scorebook" id="scorebook" aria-label="Inning score grid">
+            <thead></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="sb-legend">
+          <span>Tap cell: blank → · → X → R → blank</span>
+          <span>R = run scored · X = out/mark · · = on base</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRACTICE SCREEN -->
+  <section class="screen" id="screen-practice" hidden>
+    <div class="panel">
+      <div class="card hero wide">
+        <h2>Practice crib <span class="tag soft">empty templates</span></h2>
+        <p class="note">Blank note cards for API practices. Fill in what you want — no times, fields, or coaches invented. Stays on this device.</p>
+        <div id="practiceList" class="practice-list"></div>
+        <button id="btnAddPractice" class="primary">＋ Add blank card</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <span>API Solomon Dugout · TokenMax · Sun Oct 11</span>
+  <span>Everything stays on this device · localhost port 4283</span>
+</footer>
+
+<div id="help" class="modal" hidden>
+  <div class="modalbox">
+    <h2>How to use the dugout</h2>
+    <ol>
+      <li><b>◆ Diamond:</b> drag fielders (P, C, 1B…RF). Draw <b>Throw</b>, <b>Run</b>, or <b>Cutoff</b> arrows.</li>
+      <li><b>Build a play:</b> set up frame 1, tap <b>＋ Frame</b>, move fielders, repeat. Press <b>▶</b> to watch coverage unfold.</li>
+      <li><b>Presets:</b> load a generic defensive example (steal, bunt, cutoff, 1st-and-3rd, relay, rundown). Teaching only — not from a real game.</li>
+      <li><b>📋 Lineup:</b> edit batting order 1–9 + EH. Starts as Player 1… — your family fills names.</li>
+      <li><b>📊 Scorebook:</b> empty inning grid. Tap cells to mark. No scores pre-filled.</li>
+      <li><b>📝 Practice:</b> blank crib cards for whatever you want to remember — not a schedule.</li>
+      <li><b>Save PNG</b> exports the current diamond frame with a title band.</li>
+    </ol>
+    <p class="note">Keys: Space play/pause · ←/→ step · Ctrl+Z undo · M/T/R/C/E tools.<br>Private: no account, no upload, binds to 127.0.0.1 only.</p>
+    <button id="btnHelpClose" class="primary">Got it</button>
+  </div>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script>/*__APP__*/</script>
+</body>
+</html>
