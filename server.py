@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""API Solomon Dugout dev server (stdlib only). Serves the app on 127.0.0.1:4283.
+"""API Metro Dugout dev server (stdlib only). Serves the app on 127.0.0.1:4283.
 GET / rebuilds from web/ on every request; /health returns JSON."""
 import json, os, sys
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
@@ -25,5 +25,5 @@ class H(BaseHTTPRequestHandler):
     def log_message(self, *a): pass
 
 if __name__ == "__main__":
-    print(f"API Solomon Dugout on http://127.0.0.1:{PORT}/", flush=True)
+    print(f"API Metro Dugout on http://127.0.0.1:{PORT}/", flush=True)
     ThreadingHTTPServer(("127.0.0.1", PORT), H).serve_forever()

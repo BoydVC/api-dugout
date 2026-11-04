@@ -1,4 +1,4 @@
-/* API Solomon Dugout: offline 11U baseball diamond / lineup / scorebook / practice crib.
+/* API Metro Dugout: offline 11U baseball diamond / lineup / scorebook / practice crib.
    Generic teaching board only — no invented roster, schedule, scores, or coaches. */
 (function () {
 "use strict";
@@ -612,7 +612,7 @@ function exportPng() {
   o.fillStyle = "#f5f0e6";
   o.font = `bold ${14 * dpr}px system-ui,sans-serif`;
   o.textBaseline = "middle";
-  const title = (S.name || "API Solomon Dugout") + " · frame " + (S.cur + 1);
+  const title = (S.name || "API Metro Dugout") + " · frame " + (S.cur + 1);
   o.fillText(title, 12 * dpr, (band * dpr) / 2);
   o.fillStyle = "#c8102e";
   o.font = `bold ${11 * dpr}px system-ui,sans-serif`;
