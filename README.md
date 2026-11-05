@@ -1,6 +1,6 @@
-# API Solomon Dugout ⚾
+# API Metro Dugout ⚾
 
-**A pocket dugout board for Vic's API 11U Solomon baseball** (branding only — no invented schedule, roster, scores, or coaches). Interactive diamond with fielders, throw/run/cutoff arrows, multi-frame defensive playback, blank lineup card, empty scorebook grid, and practice crib templates. Navy · red · dirt chrome. One offline HTML file — no account, no network, no ads.
+**A pocket dugout board for Sam's Metro 11U baseball** (branding only — no invented schedule, roster, scores, or coaches). Interactive diamond with fielders, throw/run/cutoff arrows, multi-frame defensive playback, blank lineup card, empty scorebook grid, and practice crib templates. Navy · red · dirt chrome. One offline HTML file — no account, no network, no ads.
 
 * **Open it:** double-click `dist/api-dugout.html` (works from file://, USB, or AirDrop), or run `./run.sh` and go to http://127.0.0.1:4283/
 * **Best screenshot:** `screenshots/00-best-home.png`

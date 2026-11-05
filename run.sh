@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# API Solomon Dugout: build the offline snapshot, then serve on 127.0.0.1:4283.
+# API Metro Dugout: build the offline snapshot, then serve on 127.0.0.1:4283.
 #   ./run.sh           build + serve
 #   ./run.sh --shots   build + re-shoot screenshots + serve
 set -euo pipefail
